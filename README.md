@@ -11,7 +11,8 @@ Here's what you'll find:
 - `/fonts`: This folder contains the fonts used in the template. If PowerPoint is not including them correctly, you can download them and install them manually from this folder.
 - `/overview-slides`: This folder contains the GBIF overview slide deck updated every quarter. 
 - `/Theme files`: This folder contains PowerPoint files needed in case the template is not carrying over fonts and colors correctly.
-
+- `/Thematic communities`: This folder contains PowerPoint slides based on [the thematic communities](https://www.gbif.org/composition/2SEGqoMS8eMVos9T1owEEk) pages available on GBIF.org
+- `/Communities of practice`: This folder contains PowerPoint slides for Hosted Portals, Data Use Club and the Metabarcoding Data Programme
 
 ## How to Use This Template
 
