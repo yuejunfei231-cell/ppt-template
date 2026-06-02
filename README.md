@@ -1,6 +1,6 @@
 # GBIF PowerPoint Template
 
-Welcome to the GBIF PowerPoint template repository. This template is designed to help GBIF staff, partners, and stakeholders create visually appealing and consistent presentations.
+Welcome to the GBIF PowerPoint template repository. This template is designed to help GBIF staff, partners, and community participants create visually appealing and consistent presentations.
 
 ## Contents of this Repository
 
