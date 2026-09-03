@@ -328,6 +328,23 @@ class Canvas:
         self.path(catmull_rom(pts, samples=samples, tension=tension), line=color, lw=lw,
                   fill=fill, close=close, dash=dash)
 
+    # ---- 图片
+    def image(self, path, x, y, w=None, h=None, radius=0.0, shadow=False):
+        """放置图片；w/h 只给一个时按原图比例自动计算。返回 (w, h)。"""
+        from PIL import Image as _PILImage
+        with _PILImage.open(path) as im:
+            iw, ih = im.size
+        ar = iw / ih
+        if w is None and h is None:
+            w = 100.0
+        if w is None:
+            w = h * ar
+        if h is None:
+            h = w / ar
+        self.items.append(dict(kind="image", path=path, x=x, y=y, w=w, h=h,
+                               radius=radius, shadow=shadow))
+        return w, h
+
     # ---- 文本
     def text(self, x, y, w, h=None, paras=(), valign="t", name=""):
         if isinstance(paras, (Para, dict, str)):

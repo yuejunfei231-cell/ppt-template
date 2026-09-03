@@ -4,11 +4,35 @@ from __future__ import annotations
 
 import math
 
+import os
+
 from deckkit import theme as T
 from deckkit.layout import Canvas, para, rich
 
 M, CW = T.M, T.CW
 TOTAL = 10
+LOGO = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "lab-logo.png")
+
+
+def logo(cv: Canvas, dark: bool = False) -> bool:
+    """每页右上角的实验室 logo（家畜生态研究室 / Livestock Ecology Lab）。
+
+    dark=True 时（封面/尾页深蓝底）加白色圆角底卡，避免透明底缺失时发闷。
+    logo 文件缺失时静默跳过，build.py 会给出提示。
+    """
+    if not os.path.exists(LOGO):
+        return False
+    from PIL import Image
+    with Image.open(LOGO) as im:
+        ar = im.width / im.height
+    h = 30.0
+    w = h * ar
+    x, y = 912 - w, 20
+    if dark:
+        cv.rect(x - 9, y - 7, w + 18, h + 14, fill=T.WHITE, line=None, radius=9,
+                shadow=True)
+    cv.image(LOGO, x, y, h=h)
+    return True
 
 # ------------------------------------------------------------------ 化学式片段
 def _f(base, sub=None, sup=None, color=None, bold=True):
@@ -66,8 +90,7 @@ def page(cv: Canvas, kicker: str, title, no: int):
                                       spacing=1.05)])
     cv.rect(M, 78, 42, 3.5, fill=T.TEAL)
     cv.rect(M + 46, 78, 20, 3.5, fill=T.LINE)
-    cv.text(812, 20, 100, 44, [para(text=f"{no:02d}", size=30, bold=True,
-                                    color="E3EAF2", align="r", spacing=1.0)])
+    logo(cv)
     cv.line(M, 94, 912, 94, color=T.LINE, lw=1.0)
     cv.line(M, 508, 912, 508, color=T.LINE, lw=0.75)
     cv.text(M, 514, 640, 14, [para(text="高效好氧降氨菌的筛选、机制解析及其在堆肥减排保氮中的应用",
@@ -227,6 +250,7 @@ def s_cover(cv: Canvas):
                                       spacing=1.0)], valign="m")
         cv.text(168, yy, 330, 20, [para(text=v, size=12.5, bold=True, color="FFFFFF",
                                         spacing=1.0)], valign="m")
+    logo(cv, dark=True)
     cv.chip(742, 470, "HN-AD · 异养硝化-好氧反硝化", fill=T.TEAL, color="FFFFFF",
             size=10, pad_x=12, pad_y=6)
 
@@ -752,6 +776,7 @@ def s_thanks(cv: Canvas):
                                      size=11, color="B9CBDD", align="c", spacing=1.2)])
     cv.text(120, 356, 720, 18, [para(text="汇报人：[你的名字]　|　指导教师：[导师名字]　|　202X年X月X日",
                                      size=10.5, color="8FA6BD", align="c", spacing=1.2)])
+    logo(cv, dark=True)
     cv.chip(408, 420, "HN-AD · 好氧降氨菌", fill=T.TEAL, color="FFFFFF", size=10,
             pad_x=12, pad_y=6)
 

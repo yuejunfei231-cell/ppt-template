@@ -209,6 +209,24 @@ class PngRenderer:
         if drawing and len(cur) > 1:
             self.draw.line(cur, fill=col, width=lw, joint="curve")
 
+    def _image(self, it: Dict[str, Any]):
+        S = self.S
+        with Image.open(it["path"]) as im:
+            im = im.convert("RGBA")
+            tw, th = int(round(it["w"] * S)), int(round(it["h"] * S))
+            im = im.resize((tw, th), Image.LANCZOS)
+            if it.get("radius"):
+                r = min(it["radius"] * S, min(tw, th) / 2.0)
+                mask = Image.new("L", (tw, th), 0)
+                ImageDraw.Draw(mask).rounded_rectangle([0, 0, tw - 1, th - 1],
+                                                       radius=r, fill=255)
+                im.putalpha(Image.composite(im.split()[-1], Image.new("L", (tw, th), 0),
+                                            mask))
+        if it.get("shadow"):
+            self._shadow(im, (it["x"], it["y"]))
+        self.img.paste(im, (int(round(it["x"] * S)), int(round(it["y"] * S))), im)
+        self.draw = ImageDraw.Draw(self.img, "RGBA")
+
     def _text(self, it: Dict[str, Any]):
         S = self.S
         for ln in it["lines"]:

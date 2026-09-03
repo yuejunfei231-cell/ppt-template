@@ -55,6 +55,9 @@ def build(only=None):
     if not only:
         prs.save(PPTX)
         _index(done)
+    if not os.path.exists(os.path.join(HERE, "assets", "lab-logo.png")):
+        print("提示：未找到 assets/lab-logo.png，本页组跳过右上角 logo。"
+              "将实验室 logo 原图放到该路径后重跑 build.py 即可。")
     ws = layout.warnings()
     if ws:
         print("== 版式警告 ==")

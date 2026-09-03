@@ -206,6 +206,12 @@ def render(cv: Canvas, prs: Presentation):
                    it.get("alpha"), it.get("dash"), cap=it.get("cap"))
             if it.get("shadow"):
                 _shadow_on(shp)
+        elif k == "image":
+            pic = shapes.add_picture(it["path"], E(it["x"]), E(it["y"]),
+                                     E(it["w"]), E(it["h"]))
+            pic.shadow.inherit = False
+            if it.get("shadow"):
+                _shadow_on(pic)
         elif k == "text":
             h = max(1.0, it.get("h") or 20)
             tb = shapes.add_textbox(E(it["x"]), E(it["y"]), E(it["w"]), E(h))
