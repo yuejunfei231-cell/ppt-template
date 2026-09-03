@@ -13,3 +13,9 @@ $RECYCLE.BIN/
 .LSOverride
 ._*
 overview-slides/2024/temp.txt
+
+# HN-AD 组会 PPT：生成物（可再生成，不入库）
+hn-ad-seminar/output/preview/
+hn-ad-seminar/deckkit/cjk_preview.ttf
+__pycache__/
+*.pyc
