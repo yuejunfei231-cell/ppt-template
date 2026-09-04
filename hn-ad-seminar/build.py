@@ -54,7 +54,7 @@ def build(only=None):
         done.append(name)
     if not only:
         prs.save(PPTX)
-        _index(done)
+        _index(done, _copy_pptx())
     if not os.path.exists(os.path.join(HERE, "assets", "lab-logo.png")):
         print("提示：未找到 assets/lab-logo.png，本页组跳过右上角 logo。"
               "将实验室 logo 原图放到该路径后重跑 build.py 即可。")
@@ -68,7 +68,15 @@ def build(only=None):
     return done
 
 
-def _index(names):
+def _copy_pptx():
+    """把 pptx 复制一份到预览目录（ASCII 文件名，方便浏览器直接下载）"""
+    import shutil
+    dst = os.path.join(PREVIEW, "HN-AD-Seminar-Deck.pptx")
+    shutil.copyfile(PPTX, dst)
+    return os.path.basename(dst)
+
+
+def _index(names, pptx_name):
     rows = "\n".join(
         f'<figure><a href="slide-{n}.png"><img src="slide-{n}.png" alt="{n}"></a>'
         f'<figcaption>{i + 1:02d} · {n}</figcaption></figure>'
@@ -81,8 +89,11 @@ header{{padding:28px 32px 8px}}h1{{font-size:19px;margin:0 0 6px}}p{{margin:0;co
 main{{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:22px;padding:22px 32px 48px}}
 figure{{margin:0}}figure img{{width:100%;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.45);display:block}}
 figcaption{{padding:8px 2px 0;color:#8fa2b3;font-size:12px}}
-a{{text-decoration:none}}</style></head><body>
-<header><h1>{TITLE}</h1><p>研究生组会汇报 · 逐页预览（PNG 与 .pptx 版式一致）· 共 {len(names)} 页</p></header>
+a{{text-decoration:none}}
+.dl{{display:inline-block;background:#12A08C;color:#fff;padding:8px 18px;border-radius:8px;font-weight:700}}
+.dl:hover{{background:#0B7A6B}}</style></head><body>
+<header><h1>{TITLE}</h1><p>研究生组会汇报 · 逐页预览（PNG 与 .pptx 版式一致）· 共 {len(names)} 页</p>
+<p style="margin-top:10px"><a class="dl" href="{pptx_name}" download>⬇ 下载 PPT（.pptx）</a></p></header>
 <main>{rows}</main></body></html>"""
     with open(os.path.join(PREVIEW, "index.html"), "w", encoding="utf-8") as f:
         f.write(html)
