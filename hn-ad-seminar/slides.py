@@ -90,7 +90,10 @@ def page(cv: Canvas, kicker: str, title, no: int):
                                       spacing=1.05)])
     cv.rect(M, 78, 42, 3.5, fill=T.TEAL)
     cv.rect(M + 46, 78, 20, 3.5, fill=T.LINE)
-    logo(cv)
+    if not logo(cv):
+        # 无 logo 时保留右上角淡灰页码装饰（与首版一致）
+        cv.text(812, 20, 100, 44, [para(text=f"{no:02d}", size=30, bold=True,
+                                        color="E3EAF2", align="r", spacing=1.0)])
     cv.line(M, 94, 912, 94, color=T.LINE, lw=1.0)
     cv.line(M, 508, 912, 508, color=T.LINE, lw=0.75)
     cv.text(M, 514, 640, 14, [para(text="高效好氧降氨菌的筛选、机制解析及其在堆肥减排保氮中的应用",
