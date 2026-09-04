@@ -77,6 +77,9 @@ def _copy_pptx():
 
 
 def _index(names, pptx_name):
+    import base64
+    with open(PPTX, "rb") as f:
+        pptx_b64 = base64.b64encode(f.read()).decode()
     rows = "\n".join(
         f'<figure><a href="slide-{n}.png"><img src="slide-{n}.png" alt="{n}"></a>'
         f'<figcaption>{i + 1:02d} · {n}</figcaption></figure>'
@@ -93,7 +96,20 @@ a{{text-decoration:none}}
 .dl{{display:inline-block;background:#12A08C;color:#fff;padding:8px 18px;border-radius:8px;font-weight:700}}
 .dl:hover{{background:#0B7A6B}}</style></head><body>
 <header><h1>{TITLE}</h1><p>研究生组会汇报 · 逐页预览（PNG 与 .pptx 版式一致）· 共 {len(names)} 页</p>
-<p style="margin-top:10px"><a class="dl" href="{pptx_name}" download>⬇ 下载 PPT（.pptx）</a></p></header>
+<p style="margin-top:10px"><button class="dl" id="dl">⬇ 下载 PPT（.pptx）</button>
+<span id="dlhint" style="color:#8fa2b3;font-size:12px;margin-left:10px"></span></p></header>
+<script>
+const PPTX_B64="{pptx_b64}";
+document.getElementById("dl").onclick=()=>{{
+  const bin=atob(PPTX_B64);const arr=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+  const url=URL.createObjectURL(new Blob([arr],{{type:"application/vnd.openxmlformats-officedocument.presentationml.presentation"}}));
+  const a=document.createElement("a");a.href=url;a.download="组会汇报_高效好氧降氨菌.pptx";
+  document.body.appendChild(a);a.click();a.remove();
+  document.getElementById("dlhint").textContent="已开始下载：组会汇报_高效好氧降氨菌.pptx";
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+}};
+</script>
 <main>{rows}</main></body></html>"""
     with open(os.path.join(PREVIEW, "index.html"), "w", encoding="utf-8") as f:
         f.write(html)
